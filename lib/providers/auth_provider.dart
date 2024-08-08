@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../services/snackbar_service.dart';
+
 enum AuthStatus {
   NotAuthenticated,
   Authenticating,
@@ -29,9 +31,10 @@ class AuthProvider extends ChangeNotifier {
           email: _email, password: _password);
       user = _result.user;
       status = AuthStatus.Authenticated;
-      print('Logged In Successfully');
+      SnackBarService.instance.showSnackBarSuccess('Wellcome,${user!.email}');
     } catch (e) {
       status = AuthStatus.Error;
+      SnackBarService.instance.showSnackBarError('Error Authenticating');
     }
     notifyListeners();
   }

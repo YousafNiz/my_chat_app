@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:my_chat_app/providers/auth_provider.dart';
+import 'package:my_chat_app/services/snackbar_service.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +20,8 @@ class _LoginPageState extends State<LoginPage> {
 
   late GlobalKey<FormState> _formKey;
 
+  late AuthProvider _auth;
+
   _LoginPageState() {
     _formKey = GlobalKey<FormState>();
   }
@@ -25,34 +30,40 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Align(
         alignment: Alignment.center,
-        child: _loginPageUi(),
+        child: ChangeNotifierProvider<AuthProvider>.value(
+            value: AuthProvider.instance, child: _loginPageUi()),
       ),
     );
   }
 
   Widget _loginPageUi() {
-    // print(_email);
-    // print(_password);
-    return Container(
-      height: _deviceHeight * 0.60,
-      padding: EdgeInsets.symmetric(horizontal: _deviceHeight * 0.05),
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _headingWidget(),
-          _inputForm(),
-          _loginButton(),
-          _registerButton(),
-        ],
-      ),
-    );
+    print(_email);
+    print(_password);
+    return Builder(builder: (BuildContext context) {
+      SnackBarService.instance.buildContext = context;
+      _auth = Provider.of<AuthProvider>(context);
+      return Container(
+        height: _deviceHeight * 0.60,
+        padding: EdgeInsets.symmetric(horizontal: _deviceHeight * 0.05),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _headingWidget(),
+            _inputForm(),
+            _loginButton(),
+            _registerButton(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _headingWidget() {
@@ -102,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
       autocorrect: false,
       style: const TextStyle(color: Colors.white),
       validator: (_input) {
-        return _input!.length != 0 && _input.contains('0')
+        return _input!.length != 0 && _input.contains('@')
             ? null
             : 'please enter valid email address';
       },
@@ -141,22 +152,27 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _loginButton() {
-    return SizedBox(
-      height: _deviceHeight * 0.06,
-      width: _deviceWidth,
-      child: MaterialButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            // login user
-          }
-        },
-        color: Colors.blue,
-        child: const Text(
-          'LOGIN',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-      ),
-    );
+    return _auth.status == AuthStatus.Authenticating
+        ? const Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(),
+          )
+        : SizedBox(
+            height: _deviceHeight * 0.06,
+            width: _deviceWidth,
+            child: MaterialButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _auth.loginUserWithEmailAndPassword(_email, _password);
+                }
+              },
+              color: Colors.blue,
+              child: const Text(
+                'LOGIN',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+            ),
+          );
   }
 
   Widget _registerButton() {
