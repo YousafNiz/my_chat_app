@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:my_chat_app/providers/auth_provider.dart';
+import 'package:my_chat_app/services/navigation_service.dart';
 import 'package:my_chat_app/services/snackbar_service.dart';
 import 'package:provider/provider.dart';
 
@@ -42,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _loginPageUi() {
-    print(_email);
-    print(_password);
+    // print(_email);
+    // print(_password);
     return Builder(builder: (BuildContext context) {
       SnackBarService.instance.buildContext = context;
       _auth = Provider.of<AuthProvider>(context);
@@ -169,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
               color: Colors.blue,
               child: const Text(
                 'LOGIN',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
               ),
             ),
           );
@@ -177,7 +178,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _registerButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        NavigationService.instance.navigatorTo('register');
+      },
       child: SizedBox(
         height: _deviceHeight * 0.06,
         width: _deviceWidth,

@@ -13,7 +13,7 @@ enum AuthStatus {
 
 class AuthProvider extends ChangeNotifier {
   User? user;
-  late AuthStatus status;
+  late AuthStatus status = AuthStatus.NotAuthenticated;
 
   late FirebaseAuth _auth;
 
