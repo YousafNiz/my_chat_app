@@ -17,6 +17,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   late File? _image;
 
+  late String _name;
+  late String _email;
+  late String _password;
+
   late GlobalKey<FormState> _formKey;
 
   _RegistrationPageState() {
@@ -87,7 +91,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _imageSelected(),
+            // _imageSelected(),
             _nameTextField(),
             _emailTextField(),
             _passwordTextField(),
@@ -97,31 +101,31 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget _imageSelected() {
-    return Align(
-      alignment: Alignment.center,
-      child: GestureDetector(
-        onTap: () async {
-          File? _imageFile = await MediaService.instance.getImageFromLibrary();
-          setState(() {
-            _image = _imageFile!;
-          });
-        },
-        child: Container(
-          height: _deviceHeight * 0.10,
-          width: _deviceWidth * 0.10,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: _image != null
-                      ? FileImage(_image!)
-                      : NetworkImage(
-                          'https://cdn0.iconfinder.com/data/icons/occupation-002/64/programmer-programming-occupation-avatar-512.png'))),
-        ),
-      ),
-    );
-  }
+  // Widget _imageSelected() {
+  //   return Align(
+  //     alignment: Alignment.center,
+  //     child: GestureDetector(
+  //       onTap: () async {
+  //         File? _imageFile = (await MediaService.instance.getImageFromLibrary()) as File?;
+  //         setState(() {
+  //           _image = _imageFile!;
+  //         });
+  //       },
+  //       child: Container(
+  //         height: _deviceHeight * 0.10,
+  //         width: _deviceWidth * 0.10,
+  //         decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(5),
+  //             image: DecorationImage(
+  //                 fit: BoxFit.cover,
+  //                 image: _image != null
+  //                     ? FileImage(_image!)
+  //                     : NetworkImage(
+  //                         'https://cdn0.iconfinder.com/data/icons/occupation-002/64/programmer-programming-occupation-avatar-512.png'))),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _nameTextField() {
     return TextFormField(
@@ -131,7 +135,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         return _input!.length != 0 ? null : 'please Enter your Name';
       },
       onSaved: (_input) {
-        setState(() {});
+        setState(() {
+          _name = _input!;
+        });
       },
       cursorColor: Colors.white,
       decoration: const InputDecoration(
@@ -151,7 +157,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
             : 'please enter valid email';
       },
       onSaved: (_input) {
-        setState(() {});
+        setState(() {
+          _email = _input!;
+        });
       },
       cursorColor: Colors.white,
       decoration: const InputDecoration(
@@ -170,7 +178,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         return _input!.length != 0 ? null : 'please Enter password';
       },
       onSaved: (_input) {
-        setState(() {});
+        setState(() {
+          _password = _input!;
+        });
       },
       cursorColor: Colors.white,
       decoration: const InputDecoration(
